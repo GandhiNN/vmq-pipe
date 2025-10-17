@@ -1,0 +1,80 @@
+services:
+  vmq0:
+   image: vernemq/vernemq
+   container_name: vmq0
+   restart: always
+   environment:
+     DOCKER_VERNEMQ_ACCEPT_EULA: yes
+     DOCKER_VERNEMQ_ALLOW_ANONYMOUS: on
+  #  ports:
+  #    - 1883:1883
+  #    - 8888:8888
+   privileged: true
+   networks:
+    iot:
+      ipv4_address: 172.26.0.10
+
+  vmq1:
+    image: vernemq/vernemq
+    container_name: vmq1
+    depends_on:
+      - vmq0
+    restart: always
+    environment:
+      DOCKER_VERNEMQ_DISCOVERY_NODE: 172.26.0.10
+      DOCKER_VERNEMQ_ACCEPT_EULA: yes
+      DOCKER_VERNEMQ_ALLOW_ANONYMOUS: on
+    privileged: true
+    networks:
+      iot:
+        ipv4_address: 172.26.0.20
+
+  vmq2:
+    image: vernemq/vernemq
+    container_name: vmq2
+    depends_on:
+      - vmq0
+    restart: always
+    environment:
+      DOCKER_VERNEMQ_DISCOVERY_NODE: 172.26.0.10
+      DOCKER_VERNEMQ_ACCEPT_EULA: yes
+      DOCKER_VERNEMQ_ALLOW_ANONYMOUS: on
+    privileged: true
+    networks:
+      iot:
+        ipv4_address: 172.26.0.30
+
+  postgres:
+    image: postgres:15
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=iotdb
+    networks:
+      iot:
+        ipv4_address: 172.26.0.100
+
+  haproxy:
+    image: haproxy:2.4.24
+    container_name: haproxy
+    ulimits:
+      nofile:
+        soft: 1024000
+        hard: 1024000
+    ports:
+      - 1883:1883
+      - 8883:8883
+      - 8083:8083
+      - 8084:8084
+      - 8888:8888
+    volumes:
+      - $PWD/config/haproxy/haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg:ro
+    restart: always
+    networks:
+      iot:
+        
+
+networks:
+  iot:
