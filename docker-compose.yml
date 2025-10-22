@@ -12,7 +12,7 @@ services:
    privileged: true
    networks:
     iot:
-      ipv4_address: 172.26.0.10
+      ipv4_address: 172.28.0.10
 
   vmq1:
     image: vernemq/vernemq
@@ -21,13 +21,13 @@ services:
       - vmq0
     restart: always
     environment:
-      DOCKER_VERNEMQ_DISCOVERY_NODE: 172.26.0.10
+      DOCKER_VERNEMQ_DISCOVERY_NODE: 172.28.0.10
       DOCKER_VERNEMQ_ACCEPT_EULA: yes
       DOCKER_VERNEMQ_ALLOW_ANONYMOUS: on
     privileged: true
     networks:
       iot:
-        ipv4_address: 172.26.0.20
+        ipv4_address: 172.28.0.20
 
   vmq2:
     image: vernemq/vernemq
@@ -36,13 +36,13 @@ services:
       - vmq0
     restart: always
     environment:
-      DOCKER_VERNEMQ_DISCOVERY_NODE: 172.26.0.10
+      DOCKER_VERNEMQ_DISCOVERY_NODE: 172.28.0.10
       DOCKER_VERNEMQ_ACCEPT_EULA: yes
       DOCKER_VERNEMQ_ALLOW_ANONYMOUS: on
     privileged: true
     networks:
       iot:
-        ipv4_address: 172.26.0.30
+        ipv4_address: 172.28.0.30
 
   postgres:
     image: postgres:15
@@ -54,7 +54,7 @@ services:
       - POSTGRES_DB=iotdb
     networks:
       iot:
-        ipv4_address: 172.26.0.100
+        ipv4_address: 172.28.0.100
 
   haproxy:
     image: haproxy:2.4.24
@@ -78,3 +78,7 @@ services:
 
 networks:
   iot:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.28.0.0/24
