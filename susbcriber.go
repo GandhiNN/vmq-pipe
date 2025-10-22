@@ -15,7 +15,11 @@ import (
 
 var mqttMsgChan = make(chan mqtt.Message)
 
-func processMsgV1(ctx context.Context, logger *zerolog.Logger, input <-chan mqtt.Message) chan Message {
+func processMsgV1(
+	ctx context.Context,
+	logger *zerolog.Logger,
+	input <-chan mqtt.Message,
+) chan Message {
 	out := make(chan Message)
 	go func() {
 		defer close(out)
@@ -41,7 +45,11 @@ func processMsgV1(ctx context.Context, logger *zerolog.Logger, input <-chan mqtt
 	return out
 }
 
-func processMsgV2(ctx context.Context, logger *zerolog.Logger, input <-chan mqtt.Message) chan IoTRawDeviceMessage {
+func processMsgV2(
+	ctx context.Context,
+	logger *zerolog.Logger,
+	input <-chan mqtt.Message,
+) chan IoTRawDeviceMessage {
 	out := make(chan IoTRawDeviceMessage)
 	go func() {
 		defer close(out)
@@ -93,7 +101,8 @@ func subscribeMessage(clientID string) {
 		defer wg.Done()
 		finalChan := processMsgV1(ctx, logger, mqttMsgChan)
 		for iotMsg := range finalChan {
-			logger.Info().Msg(fmt.Sprintf("Client ID: %s | Received iot msg: %+v", clientID, iotMsg))
+			logger.Info().
+				Msg(fmt.Sprintf("Client ID: %s | Received iot msg: %+v", clientID, iotMsg))
 		}
 	}()
 
