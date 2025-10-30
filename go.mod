@@ -1,4 +1,4 @@
-module mqttpipe
+module vmqpipe
 
 go 1.25.0
 
