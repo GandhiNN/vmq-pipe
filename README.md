@@ -10,3 +10,7 @@ Note: `vmq0` is the cluster master
 ## Image source
 
 HAProxy + Keepalived bundle = [https://github.com/instantlinux/docker-tools/tree/main/images/haproxy-keepalived]
+
+## TODO
+
+Build image for the vmqpipe application
