@@ -6,9 +6,6 @@ services:
    environment:
      DOCKER_VERNEMQ_ACCEPT_EULA: yes
      DOCKER_VERNEMQ_ALLOW_ANONYMOUS: on
-  #  ports:
-  #    - 1883:1883
-  #    - 8888:8888
    privileged: true
    networks:
     iot:
@@ -57,7 +54,7 @@ services:
         ipv4_address: 172.28.0.100
 
   haproxy-keepalived-1:
-    image: instantlinux/haproxy-keepalived:latest
+    image: instantlinux/haproxy-keepalived:latest # https://github.com/instantlinux/docker-tools/tree/main/images/haproxy-keepalived
     container_name: haproxy-keepalived-1
     ulimits:
       nofile:
@@ -80,7 +77,7 @@ services:
         ipv4_address: 172.28.0.66
    
   haproxy-keepalived-2:
-    image: instantlinux/haproxy-keepalived:latest
+    image: instantlinux/haproxy-keepalived:latest # https://github.com/instantlinux/docker-tools/tree/main/images/haproxy-keepalived
     container_name: haproxy-keepalived-2
     ulimits:
       nofile:
