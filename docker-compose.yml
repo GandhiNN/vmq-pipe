@@ -60,16 +60,16 @@ services:
       nofile:
         soft: 1024000
         hard: 1024000
-    ports:
-      - 11883:1883
-      - 18883:8883
-      - 18083:8083
-      - 18084:8084
-      - 18888:8888
     volumes:
       - $PWD/config/haproxy/haproxy-keepalived-1.cfg:/usr/local/etc/haproxy/haproxy.cfg:ro
       - $PWD/config/keepalived/keepalived-1.conf:/etc/keepalived/keepalived.conf:ro
     restart: always
+    ports:
+      - "11883:1883"
+      - "18883:8883"
+      - "18083:8083"
+      - "18084:8084"
+      - "18888:8888"
     cap_add:
       - NET_ADMIN # needed to execute rnetlink for keepalived VRRP processes 
     networks:
@@ -83,16 +83,16 @@ services:
       nofile:
         soft: 1024000
         hard: 1024000
-    ports:
-      - 21883:1883
-      - 28883:8883
-      - 28083:8083
-      - 28084:8084
-      - 28888:8888
     volumes:
       - $PWD/config/haproxy/haproxy-keepalived-2.cfg:/usr/local/etc/haproxy/haproxy.cfg:ro
       - $PWD/config/keepalived/keepalived-2.conf:/etc/keepalived/keepalived.conf:ro
     restart: always
+    ports:
+      - "21883:1883"
+      - "28883:8883"
+      - "28083:8083"
+      - "28084:8084"
+      - "28888:8888"
     cap_add:
       - NET_ADMIN # needed to execute rnetlink for keepalived VRRP processes
     networks:
