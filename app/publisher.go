@@ -25,7 +25,7 @@ func generateRandomMessage() Message {
 	return msg
 }
 
-func publishMessage(clientId string) {
+func publishMessage(broker, topic, clientId string) {
 	opts := mqtt.NewClientOptions()
 	opts.AddBroker(broker)
 	opts.SetClientID(clientId)

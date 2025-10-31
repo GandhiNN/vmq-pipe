@@ -75,7 +75,7 @@ func processMsgV2(
 	return out
 }
 
-func subscribeMessage(clientID string) {
+func subscribeMessage(broker, topic, clientID string) {
 	appCtx := context.Background()
 	logger := setupLogger(appCtx, "")
 

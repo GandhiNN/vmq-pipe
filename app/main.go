@@ -4,6 +4,7 @@ import (
 	"flag"
 	"fmt"
 	"math/rand"
+	"os"
 	"strconv"
 	"sync"
 	"time"
@@ -11,12 +12,13 @@ import (
 	mqtt "github.com/eclipse/paho.mqtt.golang"
 )
 
-const (
-	broker             = "tcp://localhost:1883"
-	publisherClientID  = "go-mqtt-client-publisher"
-	subscriberClientID = "go-mqtt-client-subscriber"
-	topic              = "iot-messages"
-)
+func getEnv(key, defaultValue string) string {
+	val := os.Getenv(key)
+	if len(val) == 0 {
+		return defaultValue
+	}
+	return val
+}
 
 var connectHandler mqtt.OnConnectHandler = func(client mqtt.Client) {
 	fmt.Println("Connected to MQTT Broker")
@@ -39,13 +41,18 @@ func main() {
 	numWorkerPtr := flag.Int("worker", 10, "number of workers")
 	flag.Parse()
 
+	broker := getEnv("BROKER_ADDRESS", "tcp://localhost:1883")
+	publisherClientID := getEnv("PUBLISHER_CLIENT_ID", "go-mqtt-client-publisher")
+	subscriberClientID := getEnv("SUBSCRIBER_CLIENT_ID", "go-mqtt-client-subscriber")
+	topic := getEnv("TOPIC_NAME", "iot-messages")
+
 	if *funcPtr == "publish" {
 		var wg sync.WaitGroup
 		for i := 0; i < *numWorkerPtr; i++ {
 			s := strconv.Itoa(i)
 			clientId := fmt.Sprintf("%s-%s", publisherClientID, s)
 			wg.Go(func() {
-				publishMessage(clientId)
+				publishMessage(broker, topic, clientId)
 			})
 		}
 		wg.Wait()
@@ -55,7 +62,7 @@ func main() {
 			s := strconv.Itoa(i)
 			clientId := fmt.Sprintf("%s-%s", subscriberClientID, s)
 			wg.Go(func() {
-				subscribeMessage(clientId)
+				subscribeMessage(broker, topic, clientId)
 			})
 		}
 		wg.Wait()
