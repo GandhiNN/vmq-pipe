@@ -41,6 +41,30 @@ services:
       iot:
         ipv4_address: 172.28.0.30
 
+  publisher:
+    image: mqttapp
+    container_name: publisher
+    depends_on:
+      - vmq0
+    restart: always
+    command: >
+      sh -c "/app/vmqpipe -func=publish -worker=10"
+    privileged: true
+    networks:
+      iot:
+
+  subscriber:
+    image: mqttapp
+    container_name: subscriber
+    depends_on:
+      - vmq0
+    restart: always
+    command: >
+      sh -c "/app/vmqpipe -func=subscribe -worker=10"
+    privileged: true
+    networks:
+      iot:
+
   postgres:
     image: postgres:15
     ports:
