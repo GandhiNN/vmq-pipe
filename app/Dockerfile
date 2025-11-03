@@ -11,7 +11,7 @@ RUN apk update && apk add --no-cache git
 ENV CGO_ENABLED=0 GOOS=linux GOARCH=amd64
 
 # Copy the source code
-COPY ./app .
+COPY . .
 
 # Install module dependencies
 RUN go mod tidy
@@ -38,5 +38,5 @@ COPY --from=builder --chown=appuser:appuser /app/vmqpipe /app/vmqpipe
 # RUN as non-root user
 USER appuser
 
-# Set the entrypoint command
-ENTRYPOINT [ "/app/vmqpipe" ]
+# # Set the entrypoint command
+# ENTRYPOINT [ "/app/vmqpipe" ]
