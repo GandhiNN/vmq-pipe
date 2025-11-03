@@ -45,10 +45,16 @@ services:
     image: mqttapp
     container_name: publisher
     depends_on:
-      - vmq0
+      - haproxy-keepalived-1
+      - haproxy-keepalived-2
     restart: always
+    environment:
+      - BROKER_ADDRESS="tcp://172.28.0.111:1883"
+      - PUBLISHER_CLIENT_ID:"go-mqtt-client-publisher"
     command: >
-      sh -c "/app/vmqpipe -func=publish -worker=10"
+      sh -c "export BROKER_ADDRESS="tcp://172.28.0.111:1883" &&
+             export SUBSCRIBER_CLIENT_ID="go-mqtt-client-subscriber"
+             /app/vmqpipe -func=publish -worker=10"
     privileged: true
     networks:
       iot:
@@ -57,10 +63,16 @@ services:
     image: mqttapp
     container_name: subscriber
     depends_on:
-      - vmq0
+      - haproxy-keepalived-1
+      - haproxy-keepalived-2
     restart: always
+    environment:
+      - BROKER_ADDRESS="tcp://172.28.0.111:1883"
+      - SUBSCRIBER_CLIENT_ID="go-mqtt-client-subscriber"
     command: >
-      sh -c "/app/vmqpipe -func=subscribe -worker=10"
+      sh -c "export BROKER_ADDRESS="tcp://172.28.0.111:1883" && 
+             export SUBSCRIBER_CLIENT_ID="go-mqtt-client-subscriber" &&
+             /app/vmqpipe -func=subscribe -worker=10"
     privileged: true
     networks:
       iot:
